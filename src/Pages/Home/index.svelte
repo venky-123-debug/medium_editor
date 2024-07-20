@@ -9,46 +9,39 @@
     document.execCommand(command, false, value)
   }
 
+  let savedRange = null
+
   const openLinkModal = () => {
-    url = window.getSelection().toString()
+    const selection = window.getSelection()
+    if (selection.rangeCount > 0) {
+      savedRange = selection.getRangeAt(0)
+    }
+    url = savedRange ? savedRange.toString() : ""
     showModal = !showModal
   }
 
   const insertLink = (event) => {
-    console.log({ url })
-    url = event.detail.url
-    const selection = window.getSelection()
+    url = event.detail.url.trim()
 
-    if (url && selection.rangeCount > 0) {
-      const range = selection.getRangeAt(0)
-
-      console.log(range.toString())
-
-      if (range.toString().trim() !== "") {
+    if (url && savedRange) {
+      const selection = window.getSelection()
+      if (savedRange.toString().trim() !== "") {
         const anchor = document.createElement("a")
         anchor.href = url
         anchor.target = "_blank"
 
-        const fragment = range.extractContents()
+        const fragment = savedRange.extractContents()
         anchor.appendChild(fragment)
-        range.insertNode(anchor)
+        savedRange.insertNode(anchor)
 
+        // Clear and restore selection
         selection.removeAllRanges()
-        selection.addRange(range)
+        selection.addRange(savedRange)
       }
     }
 
     openLinkModal()
   }
-
-  // const insertLink = (event) => {
-  //   url = event.detail.url
-  //   if (url) {
-  //     formatText("createLink", url)
-  //     // document.execCommand("createLink", false, url)
-  //   }
-  //   openLinkModal()
-  // }
 
   const checkTextSelection = () => {
     isTextSelected = window.getSelection().toString().length > 0
