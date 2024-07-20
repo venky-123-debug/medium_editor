@@ -5,6 +5,7 @@
   let showModal = false
   let url = ""
   let isTextSelected = false
+  let content = ""
 
   const formatText = (command, value = null) => {
     document.execCommand(command, false, value)
@@ -13,7 +14,7 @@
   let isBoldActive = false
   let isItalicActive = false
   let isUnderlineActive = false
-  let isLinkActive = false
+  // let isLinkActive = false
 
   let savedRange = null
 
@@ -75,12 +76,13 @@
 
 <div class="flex min-h-screen items-center justify-center bg-gray-900">
   <div class="w-full max-w-2xl">
-    <div class="toolbar flex space-x-2">
-      <Button iClass="fa-bold" isSelected={isTextSelected} active={isBoldActive} on:click={() => formatText("bold")} />
-      <Button iClass="fa-italic" isSelected={isTextSelected} active={isItalicActive} on:click={() => formatText("italic")} />
-      <Button iClass="fa-underline" isSelected={isTextSelected} active={isUnderlineActive} on:click={() => formatText("underline")} />
-      <!-- Uncomment if needed -->
-      <!-- <Button 
+    {#if isTextSelected || isBoldActive || isItalicActive || isUnderlineActive}
+      <div class="toolbar flex space-x-2">
+        <Button iClass="fa-bold" isSelected={isTextSelected} active={isBoldActive} on:click={() => formatText("bold")} />
+        <Button iClass="fa-italic" isSelected={isTextSelected} active={isItalicActive} on:click={() => formatText("italic")} />
+        <Button iClass="fa-underline" isSelected={isTextSelected} active={isUnderlineActive} on:click={() => formatText("underline")} />
+        <!-- Uncomment if needed -->
+        <!-- <Button 
         isSelected={isTextSelected} 
         on:click={() => formatText("insertOrderedList")} 
       />
@@ -88,15 +90,19 @@
         isSelected={isTextSelected} 
         on:click={() => formatText("insertUnorderedList")} 
       /> -->
-      <Button iClass="fa-link" isSelected={isTextSelected} on:click={openLinkModal} />
-    </div>
+        <Button iClass="fa-link" isSelected={isTextSelected} on:click={openLinkModal} />
+      </div>
+    {/if}
     <div
-      class="mt-2 min-h-[200px] w-full rounded border border-gray-500 bg-transparent p-4 text-white shadow focus:border-blue-500 focus:outline-none"
+      class="mt-2 min-h-[200px] w-full rounded border border-gray-500 bg-transparent p-4 text-white shadow placeholder:text-base placeholder:text-gray-400 focus:border-blue-500 focus:outline-none"
       contenteditable="true"
+      placeholder="Type something ..."
       on:input={checkTextSelection}
       on:mouseup={checkTextSelection}
       on:keyup={checkTextSelection}
-    />
+    >
+      {content}
+    </div>
   </div>
 
   <LinkModal on:linkInsert={insertLink} bind:url bind:showModal />
