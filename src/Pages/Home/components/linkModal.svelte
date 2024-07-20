@@ -1,9 +1,9 @@
 <script>
   import { createEventDispatcher } from "svelte"
 
+  const dispatch = createEventDispatcher()
   export let url = ""
   export let showModal = false
-  const dispatch = createEventDispatcher()
 
   const handleInsert = () => {
     dispatch("linkInsert", { url })

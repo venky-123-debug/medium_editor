@@ -1,5 +1,6 @@
 <script>
   import LinkModal from "./components/linkModal.svelte"
+  import Button from "./shared/button.svelte"
 
   let showModal = false
   let url = ""
@@ -51,12 +52,19 @@
 <div class="flex min-h-screen items-center justify-center bg-gray-900">
   <div class="w-full max-w-2xl">
     <div class="toolbar flex space-x-2">
-      <button on:click={() => formatText("bold")} disabled={!isTextSelected}>Bold</button>
-      <button on:click={() => formatText("italic")} disabled={!isTextSelected}>Italic</button>
-      <button on:click={() => formatText("underline")} disabled={!isTextSelected}>Underline</button>
-      <!-- <button on:click={() => formatText("insertOrderedList")} disabled={!isTextSelected}>OL</button>
-      <button on:click={() => formatText("insertUnorderedList")} disabled={!isTextSelected}>UL</button> -->
-      <button on:click={openLinkModal} disabled={!isTextSelected}>Link</button>
+      <Button iClass="fa-bold" isSelected={isTextSelected} on:click={() => formatText("bold")} />
+      <Button iClass="fa-italic" isSelected={isTextSelected} on:click={() => formatText("italic")} />
+      <Button iClass="fa-underline" isSelected={isTextSelected} on:click={() => formatText("underline")} />
+      <!-- Uncomment if needed -->
+      <!-- <Button 
+        isSelected={isTextSelected} 
+        on:click={() => formatText("insertOrderedList")} 
+      />
+      <Button 
+        isSelected={isTextSelected} 
+        on:click={() => formatText("insertUnorderedList")} 
+      /> -->
+      <Button iClass="fa-link" isSelected={isTextSelected} on:click={openLinkModal} />
     </div>
     <div
       class="mt-2 min-h-[200px] w-full rounded border border-gray-500 bg-transparent p-4 text-white shadow focus:border-blue-500 focus:outline-none"
@@ -71,16 +79,6 @@
 </div>
 
 <style lang="postcss">
-  .toolbar button {
-    @apply m-1 rounded bg-gray-300 p-2;
-  }
-  .toolbar button:hover {
-    @apply bg-gray-400;
-  }
-  .toolbar button:disabled {
-    @apply cursor-not-allowed bg-gray-400;
-  }
-
   :global([contenteditable="true"] a) {
     color: rgb(159, 159, 218);
     text-decoration: underline;
