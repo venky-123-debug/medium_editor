@@ -10,28 +10,45 @@
   }
 
   const openLinkModal = () => {
+    url = window.getSelection().toString()
     showModal = !showModal
   }
 
   const insertLink = (event) => {
+    console.log({ url })
     url = event.detail.url
-    if (url) {
-      const selection = window.getSelection()
-      if (selection.rangeCount > 0 && !selection.isCollapsed) {
-        const range = selection.getRangeAt(0)
-        const selectedText = range.toString()
+    const selection = window.getSelection()
+
+    if (url && selection.rangeCount > 0) {
+      const range = selection.getRangeAt(0)
+
+      console.log(range.toString())
+
+      if (range.toString().trim() !== "") {
         const anchor = document.createElement("a")
         anchor.href = url
         anchor.target = "_blank"
-        anchor.textContent = selectedText
-        range.deleteContents()
+
+        const fragment = range.extractContents()
+        anchor.appendChild(fragment)
         range.insertNode(anchor)
+
         selection.removeAllRanges()
         selection.addRange(range)
       }
     }
+
     openLinkModal()
   }
+
+  // const insertLink = (event) => {
+  //   url = event.detail.url
+  //   if (url) {
+  //     formatText("createLink", url)
+  //     // document.execCommand("createLink", false, url)
+  //   }
+  //   openLinkModal()
+  // }
 
   const checkTextSelection = () => {
     isTextSelected = window.getSelection().toString().length > 0
@@ -69,5 +86,16 @@
   }
   .toolbar button:disabled {
     @apply cursor-not-allowed bg-gray-400;
+  }
+
+  :global([contenteditable="true"] a) {
+    color: rgb(159, 159, 218);
+    text-decoration: underline;
+    border-bottom: 2px solid rgb(36, 36, 80);
+  }
+
+  :global([contenteditable="true"] a:hover) {
+    text-decoration: none;
+    border-bottom: 2px solid darkblue;
   }
 </style>
