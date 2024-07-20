@@ -17,7 +17,7 @@
 <div class:hidden={!showModal} class="modal-background flex items-center justify-center">
   <div class="modal-content">
     <label for="linkInput" class="block text-sm font-medium text-gray-700">Enter URL:</label>
-    <input type="text" id="linkInput" class="mt-1 block w-full rounded-md border border-gray-300 p-2" value={url} />
+    <input type="text" id="linkInput" class="mt-1 block w-full rounded-md border border-gray-300 p-2" bind:value={url} />
     <div class="mt-4 flex justify-end">
       <button on:click={handleInsert} class="modal-button">Insert</button>
       <button on:click={handleClose} class="modal-button-cancel">Cancel</button>
