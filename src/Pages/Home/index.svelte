@@ -7,6 +7,13 @@
   let url = ""
   let isTextSelected = false
   let content = ""
+  // let files
+  let files = []
+  let imageUrls = []
+  $: {
+    console.log("index files", files)
+  }
+  let filesArray = []
 
   const formatText = (command, value = null) => {
     document.execCommand(command, false, value)
@@ -28,8 +35,8 @@
     showModal = !showModal
   }
 
-  const insertLink = (event) => {
-    url = event.detail.url.trim()
+  const insertLink = (e) => {
+    url = e.detail.url.trim()
 
     if (url && savedRange) {
       const selection = window.getSelection()
@@ -73,11 +80,25 @@
       // isLinkActive = isLink(range.commonAncestorContainer)
     }
   }
+  let showMenu = false
+  const handleFileUpload = (e) => {
+    const uploadedFiles = e.detail.files
+    imageUrls = uploadedFiles.map((file) => URL.createObjectURL(file))
+    showMenu = !showMenu
+  }
 </script>
 
 <div class="flex min-h-screen items-center justify-center bg-gray-900">
   <div class="flex w-full max-w-2xl flex-col gap-3">
-    <AddSection />
+    <AddSection bind:files on:fileUpload={handleFileUpload} bind:showMenu />
+    {#if imageUrls.length > 0}
+      <div class="mt-4">
+        {#each imageUrls as imageUrl}
+          <!-- svelte-ignore a11y-img-redundant-alt -->
+          <img src={imageUrl} alt="Uploaded Image" class="mb-2 aspect-auto h-auto w-full" />
+        {/each}
+      </div>
+    {/if}
     {#if isTextSelected || isBoldActive || isItalicActive || isUnderlineActive}
       <div class="toolbar flex space-x-2">
         <Button iClass="fa-bold" isSelected={isTextSelected} active={isBoldActive} on:click={() => formatText("bold")} />

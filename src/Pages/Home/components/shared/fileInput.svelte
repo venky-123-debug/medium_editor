@@ -1,12 +1,21 @@
 <script>
+  import { createEventDispatcher } from "svelte"
+  const dispatch = createEventDispatcher()
   export let iClass = ""
   let fileInput
   export let files
 
+  // function handleFileChange(event) {
+  //   files = event.target.files
+  //   // Handle the file(s) as needed
+  //   console.log(files)
+  // }
   function handleFileChange(event) {
-    files = event.target.files
-    // Handle the file(s) as needed
-    console.log(files)
+    const selectedFiles = event.target.files
+    if (selectedFiles.length > 0) {
+      files = Array.from(selectedFiles)
+      dispatch("fileUpload", { files })
+    }
   }
 </script>
 
