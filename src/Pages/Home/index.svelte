@@ -81,16 +81,52 @@
     }
   }
   let showMenu = false
+  let videLinkModal = false
+  let videoDetails = null
+  let videoUrl = ""
   const handleFileUpload = (e) => {
     const uploadedFiles = e.detail.files
     imageUrls = uploadedFiles.map((file) => URL.createObjectURL(file))
     showMenu = !showMenu
   }
+  const fetchVideoDetails = (url) => {
+    const videoId = extractVideoId(url)
+    const thumbnailUrl = getThumbnailUrl(videoId, "hqdefault")
+    // Note: Extracting title and duration requires API key, so we can only fetch thumbnail here.
+
+    // Set video details for display
+    videoDetails = {
+      title: "Unknown Title", // Default or fetch title via API if available
+      thumbnail: thumbnailUrl,
+      duration: "Unknown Duration", // Default or fetch duration via API if available
+    }
+
+    console.log({ videoDetails })
+  }
+
+  const extractVideoId = (url) => {
+    const urlParams = new URLSearchParams(new URL(url).search)
+    return urlParams.get("v") || url.split("/").pop()
+  }
+
+  const getThumbnailUrl = (videoId, quality = "hqdefault") => {
+    return `https://img.youtube.com/vi/${videoId}/${quality}.jpg`
+  }
+
+  const openVideoLinkModal = () => {
+    videLinkModal = !videLinkModal
+  }
+
+  const handleVideoLinkSubmit = (e) => {
+    videoUrl = e.detail.url
+    fetchVideoDetails(videoUrl)
+    openVideoLinkModal() // Close the modal after fetching details
+  }
 </script>
 
 <div class="flex min-h-screen items-center justify-center bg-gray-900">
   <div class="flex w-full max-w-2xl flex-col gap-3">
-    <AddSection bind:files on:fileUpload={handleFileUpload} bind:showMenu />
+    <AddSection bind:files on:fileUpload={handleFileUpload} bind:showMenu on:click={() => (videLinkModal = true)} />
     {#if imageUrls.length > 0}
       <div class="mt-4">
         {#each imageUrls as imageUrl}
@@ -129,12 +165,15 @@
   </div>
 
   <LinkModal on:linkInsert={insertLink} bind:url bind:showModal />
+  <!-- {#if videLinkModal} -->
+  <LinkModal url={videoUrl} showModal={videLinkModal} on:linkInsert={handleVideoLinkSubmit} />
+  <!-- {/if} -->
 </div>
 
 <style lang="postcss">
   :global([contenteditable="true"] a) {
     color: rgb(159, 159, 218);
-    text-decoration: underline;
+    /* text-decoration: underline; */
     border-bottom: 2px solid rgb(36, 36, 80);
   }
 

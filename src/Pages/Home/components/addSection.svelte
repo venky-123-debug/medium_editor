@@ -14,6 +14,6 @@
   {#if showMenu}
     <FileInput iClass={"fa-image"} bind:files on:fileUpload />
     <Button iClass={"fa-text"} />
-    <Button iClass={"fa-video"} />
+    <Button iClass={"fa-video"} on:click />
   {/if}
 </div>
