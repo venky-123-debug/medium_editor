@@ -1,6 +1,7 @@
 <script>
+  import AddSection from "./components/addSection.svelte"
   import LinkModal from "./components/linkModal.svelte"
-  import Button from "./shared/button.svelte"
+  import Button from "./shared/toolBarButton.svelte"
 
   let showModal = false
   let url = ""
@@ -75,7 +76,8 @@
 </script>
 
 <div class="flex min-h-screen items-center justify-center bg-gray-900">
-  <div class="w-full max-w-2xl">
+  <div class="flex w-full max-w-2xl flex-col gap-3">
+    <AddSection />
     {#if isTextSelected || isBoldActive || isItalicActive || isUnderlineActive}
       <div class="toolbar flex space-x-2">
         <Button iClass="fa-bold" isSelected={isTextSelected} active={isBoldActive} on:click={() => formatText("bold")} />
@@ -94,7 +96,7 @@
       </div>
     {/if}
     <div
-      class="mt-2 min-h-[200px] w-full rounded border border-gray-500 bg-transparent p-4 text-white shadow placeholder:text-base placeholder:text-gray-400 focus:border-blue-500 focus:outline-none"
+      class="min-h-[200px] w-full rounded border border-gray-500 bg-transparent p-4 text-white shadow placeholder:text-base placeholder:text-gray-400 focus:border-blue-500 focus:outline-none"
       contenteditable="true"
       placeholder="Type something ..."
       on:input={checkTextSelection}
