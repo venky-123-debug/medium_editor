@@ -10,6 +10,11 @@
     document.execCommand(command, false, value)
   }
 
+  let isBoldActive = false
+  let isItalicActive = false
+  let isUnderlineActive = false
+  let isLinkActive = false
+
   let savedRange = null
 
   const openLinkModal = () => {
@@ -44,17 +49,36 @@
     openLinkModal()
   }
 
+  // const checkTextSelection = () => {
+  //   isTextSelected = window.getSelection().toString().length > 0
+  // }
   const checkTextSelection = () => {
     isTextSelected = window.getSelection().toString().length > 0
+    updateActiveStates() // Update active states on selection change
+  }
+
+  const updateActiveStates = () => {
+    const selection = window.getSelection()
+    if (selection.rangeCount > 0) {
+      const range = selection.getRangeAt(0)
+      const parent = range.commonAncestorContainer
+
+      // Check if text is bold, italic, or underline
+      isBoldActive = document.queryCommandState("bold")
+      isItalicActive = document.queryCommandState("italic")
+      isUnderlineActive = document.queryCommandState("underline")
+      // const isLink = (node) => node.nodeName === "A" || (node.parentNode && isLink(node.parentNode))
+      // isLinkActive = isLink(range.commonAncestorContainer)
+    }
   }
 </script>
 
 <div class="flex min-h-screen items-center justify-center bg-gray-900">
   <div class="w-full max-w-2xl">
     <div class="toolbar flex space-x-2">
-      <Button iClass="fa-bold" isSelected={isTextSelected} on:click={() => formatText("bold")} />
-      <Button iClass="fa-italic" isSelected={isTextSelected} on:click={() => formatText("italic")} />
-      <Button iClass="fa-underline" isSelected={isTextSelected} on:click={() => formatText("underline")} />
+      <Button iClass="fa-bold" isSelected={isTextSelected} active={isBoldActive} on:click={() => formatText("bold")} />
+      <Button iClass="fa-italic" isSelected={isTextSelected} active={isItalicActive} on:click={() => formatText("italic")} />
+      <Button iClass="fa-underline" isSelected={isTextSelected} active={isUnderlineActive} on:click={() => formatText("underline")} />
       <!-- Uncomment if needed -->
       <!-- <Button 
         isSelected={isTextSelected} 
